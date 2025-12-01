@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { GameRoomState } from "../types";
 import { useRoomStore } from "../store/useRoom";
 import { useAuthStore } from "../store/useAuth";
+import { playVoteSfx } from "../lib/sfx";
 
 interface Props {
   room?: GameRoomState;
@@ -17,6 +18,9 @@ const GameBoard = ({ room }: Props) => {
   const [targetId, setTargetId] = useState<string | undefined>();
   const [chat, setChat] = useState("");
   const [abilityOpen, setAbilityOpen] = useState(true);
+  const [highlightPlayer, setHighlightPlayer] = useState<string>();
+  const voteCountRef = useRef<number>(room?.voteLog?.length ?? 0);
+  const voteTimerRef = useRef<number | undefined>(undefined);
 
   const mySlot = useMemo(
     () => room?.players.find((slot) => slot.profile.id === profile?.id),
@@ -45,6 +49,34 @@ const GameBoard = ({ room }: Props) => {
 
   const aliveCount = room?.players.filter((slot) => slot.alive).length ?? 0;
 
+  useEffect(() => {
+    const nextCount = room?.voteLog.length ?? 0;
+    if (voteCountRef.current === undefined) {
+      voteCountRef.current = nextCount;
+      return;
+    }
+    if (nextCount > voteCountRef.current && room?.voteLog.length) {
+      const lastVote = room.voteLog[room.voteLog.length - 1];
+      setHighlightPlayer(lastVote.targetId);
+      playVoteSfx();
+      if (voteTimerRef.current) {
+        window.clearTimeout(voteTimerRef.current);
+      }
+      voteTimerRef.current = window.setTimeout(() => {
+        setHighlightPlayer(undefined);
+      }, 900);
+    }
+    voteCountRef.current = nextCount;
+  }, [room?.voteLog]);
+
+  useEffect(() => {
+    return () => {
+      if (voteTimerRef.current) {
+        window.clearTimeout(voteTimerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="game-board">
       <div className="board-header">
@@ -64,7 +96,12 @@ const GameBoard = ({ room }: Props) => {
       <div className="board-content">
         <div className={`player-grid ${abilityOpen ? "" : "expanded"}`}>
           {room?.players.map((slot, index) => (
-            <div key={slot.id} className={`player-card ${!slot.alive ? "dead" : ""}`}>
+            <div
+              key={slot.id}
+              className={`player-card ${!slot.alive ? "dead" : ""} ${
+                highlightPlayer === slot.id ? "vote-highlight" : ""
+              }`}
+            >
               <div className="player-rank">{index + 1}</div>
               <img src={avatarFromName(slot.profile.username)} alt={slot.profile.username} />
               <strong>{slot.profile.username}</strong>

@@ -49,6 +49,7 @@ export interface GameRoomState {
   day: number;
   eventLog: string[];
   chatLog: ChatMessage[];
+  voteLog: VoteLogEntry[];
   winner?: string;
 }
 
@@ -59,6 +60,13 @@ export interface ChatMessage {
   text: string;
   createdAt: number;
   type: "system" | "player";
+}
+
+export interface VoteLogEntry {
+  voterId: string;
+  targetId: string;
+  phase: string;
+  timestamp: number;
 }
 
 export interface InventoryEntry {
