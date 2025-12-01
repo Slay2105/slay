@@ -3,6 +3,7 @@ import { GameRoomState } from "../types";
 import { useRoomStore } from "../store/useRoom";
 import { useAuthStore } from "../store/useAuth";
 import { playVoteSfx } from "../lib/sfx";
+import { MASOI_ASSETS } from "../data/masoiManifest";
 
 interface Props {
   room?: GameRoomState;
@@ -10,6 +11,11 @@ interface Props {
 
 const avatarFromName = (name: string) =>
   `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(name)}`;
+const ASSET_LOOKUP = MASOI_ASSETS.reduce<Record<string, string>>((acc, asset) => {
+  acc[asset.id] = asset.asset;
+  return acc;
+}, {});
+const DEFAULT_AVATAR = ASSET_LOOKUP["danlang"] ?? ASSET_LOOKUP["masoi"];
 
 const GameBoard = ({ room }: Props) => {
   const { profile } = useAuthStore();
@@ -48,6 +54,12 @@ const GameBoard = ({ room }: Props) => {
   };
 
   const aliveCount = room?.players.filter((slot) => slot.alive).length ?? 0;
+  const resolveSkinAsset = (skinId?: string) =>
+    (skinId && ASSET_LOOKUP[skinId]) || undefined;
+  const resolvePortrait = (slot?: GameRoomState["players"][number]) => {
+    if (!slot) return DEFAULT_AVATAR ?? avatarFromName("default");
+    return slot.role?.asset ?? resolveSkinAsset(slot.profile.equippedSkin) ?? DEFAULT_AVATAR ?? avatarFromName(slot.profile.username);
+  };
 
   useEffect(() => {
     const nextCount = room?.voteLog.length ?? 0;
@@ -103,10 +115,16 @@ const GameBoard = ({ room }: Props) => {
               }`}
             >
               <div className="player-rank">{index + 1}</div>
-              <img src={avatarFromName(slot.profile.username)} alt={slot.profile.username} />
+              <img
+                src={resolvePortrait(slot)}
+                alt={slot.role?.name ?? slot.profile.username}
+                title={slot.role?.description}
+              />
               <strong>{slot.profile.username}</strong>
               {slot.role && room.phase !== "lobby" && (
-                <small>{slot.role.name}</small>
+                <span className="role-chip" title={slot.role.description}>
+                  {slot.role.name}
+                </span>
               )}
             </div>
           ))}
@@ -150,14 +168,14 @@ const GameBoard = ({ room }: Props) => {
                   className={`ability-pill ${abilityOpen ? "active" : ""}`}
                   onClick={() => setAbilityOpen((prev) => !prev)}
                 >
-                  🐾
+                  <img src={resolvePortrait(mySlot)} alt="Open ability panel" />
                 </button>
                 <span>Chat & Nhật ký</span>
               </div>
               <button type="button">⚙️</button>
             </div>
             <div className="chat-log">
-              {room?.chatLog.slice(-20).map((msg) => (
+              {room?.chatLog?.slice(-20).map((msg) => (
                 <p key={msg.id} className={`chat-line ${msg.type}`}>
                   <strong>{msg.senderName}</strong>: {msg.text}
                 </p>

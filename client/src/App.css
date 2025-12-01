@@ -179,23 +179,41 @@
   gap: 0.8rem;
 }
 
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profile-avatar img {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.5rem;
+}
+
 .avatar-picker .avatar-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
 }
 
 .avatar-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.03);
-  padding: 0.8rem;
+  padding: 0.8rem 0.8rem 1.2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
   cursor: pointer;
   color: inherit;
+  min-height: 200px;
+  position: relative;
 }
 
 .avatar-card.selected {
@@ -203,9 +221,55 @@
   box-shadow: 0 0 12px rgba(255, 139, 213, 0.5);
 }
 
+.avatar-card.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .avatar-card img {
-  width: 72px;
-  height: 72px;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45));
+}
+
+.avatar-card__meta {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.avatar-card__meta small {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.type-chip {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  color: #0b0f1a;
+}
+
+.type-chip.type-dan {
+  background: #b2f0ff;
+}
+
+.type-chip.type-masoi {
+  background: #ff9aa2;
+}
+
+.type-chip.type-doclap {
+  background: #ffd555;
+}
+
+.type-chip.type-doiphe,
+.type-chip.type-extra {
+  background: #d5c1ff;
 }
 
 .leaderboard ul {
@@ -247,6 +311,32 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+  align-items: center;
+}
+
+.shop-card__preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.shop-card__preview img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.4rem;
+}
+
+.shop-card__preview .placeholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .shop-card button {
@@ -348,6 +438,17 @@
   margin-bottom: 0.4rem;
 }
 
+.role-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+}
+
 .player-rank {
   position: absolute;
   top: 8px;
@@ -414,6 +515,12 @@
   color: #ffd966;
   font-size: 1.1rem;
   cursor: pointer;
+}
+
+.ability-pill img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .ability-pill.active {

@@ -53,12 +53,13 @@ export const registerUser = async (params: {
   const hashed = await bcrypt.hash(params.password, 10);
   const now = Date.now();
   const id = uuid();
+  const defaultSkin = "danlang";
   db.prepare(
-    `INSERT INTO users (id, username, email, password, createdAt, xp, level, coins) VALUES (?, ?, ?, ?, ?, 0, 1, 500)`
-  ).run(id, params.username, params.email, hashed, now);
+    `INSERT INTO users (id, username, email, password, createdAt, xp, level, coins, equippedSkin) VALUES (?, ?, ?, ?, ?, 0, 1, 500, ?)`
+  ).run(id, params.username, params.email, hashed, now, defaultSkin);
   db.prepare(
     `INSERT INTO inventories (id, userId, itemId, itemType) VALUES (lower(hex(randomblob(8))), ?, ?, ?)`
-  ).run(id, "pink-angel", "skin");
+  ).run(id, defaultSkin, "skin");
   const row = db.prepare(SELECT_PROFILE).get(id) as UserRow;
   return hydrateProfile(row);
 };

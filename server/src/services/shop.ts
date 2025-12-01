@@ -2,9 +2,7 @@ import { db } from "./db";
 import { SHOP_ITEMS } from "../data/shopItems";
 import { InventoryItem } from "../types";
 
-const bundleContents: Record<string, string[]> = {
-  bundle_start_pack: ["skin_basic_forest", "effect_vote_flash"]
-};
+const bundleContents: Record<string, string[]> = {};
 
 export const listShopItems = (): InventoryItem[] => SHOP_ITEMS;
 

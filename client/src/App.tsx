@@ -44,7 +44,8 @@ const App = () => {
 
   const ownedSkins = useMemo(() => {
     if (!profile) return [];
-    return Array.from(new Set(["pink-angel", ...profile.skins]));
+    const base = profile.skins.length ? profile.skins : ["danlang"];
+    return Array.from(new Set(base));
   }, [profile]);
 
   const handleEquipSkin = async (skinId: string) => {
