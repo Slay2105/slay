@@ -382,12 +382,49 @@
   justify-content: space-between;
 }
 
+.chat-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ability-pill {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffd966;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.ability-pill.active {
+  background: linear-gradient(135deg, #ffd966, #ff8bd5);
+  color: #2b2140;
+  box-shadow: 0 4px 15px rgba(255, 217, 102, 0.5);
+}
+
 .chat-log {
   flex: 1;
   overflow: auto;
   margin: 0.8rem 0;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-line.system {
+  color: #ffd966;
+}
+
+.event-mini-log {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  max-height: 100px;
+  overflow: auto;
 }
 
 .chat-input {
@@ -429,6 +466,10 @@
   border: none;
   border-radius: 12px;
   padding: 0.4rem 0.9rem;
+}
+
+.player-grid.expanded {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 }
 
 @media (max-width: 1200px) {

@@ -57,6 +57,15 @@ export interface PlayerSlot {
   meta?: Record<string, any>;
 }
 
+export interface ChatMessage {
+  id: string;
+  senderId?: string;
+  senderName: string;
+  text: string;
+  createdAt: number;
+  type: "system" | "player";
+}
+
 export interface GameRoomOptions {
   name: string;
   maxPlayers: number;
@@ -77,6 +86,7 @@ export interface GameRoomState {
   day: number;
   voteLog: VoteRecord[];
   eventLog: string[];
+  chatLog: ChatMessage[];
   winner?: string;
 }
 

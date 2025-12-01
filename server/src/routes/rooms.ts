@@ -16,6 +16,7 @@ const actionSchema = z.object({
 });
 
 const voteSchema = z.object({ targetId: z.string() });
+const chatSchema = z.object({ text: z.string().min(1).max(280) });
 
 export const createRoomRouter = (manager: RoomManager) => {
   const router = Router();
@@ -111,6 +112,25 @@ export const createRoomRouter = (manager: RoomManager) => {
         if (!slot) throw new Error("Bạn chưa tham gia phòng này");
         manager.vote(room.state.id, slot.id, data.targetId);
         res.json({ message: "Đã bỏ phiếu" });
+      } catch (error: any) {
+        res.status(400).json({ message: error.message });
+      }
+    }
+  );
+
+  router.post(
+    "/rooms/:roomId/chat",
+    requireAuth,
+    (req: AuthedRequest, res) => {
+      try {
+        const data = chatSchema.parse(req.body);
+        const room = manager.getRoom(req.params.roomId);
+        const slot = room.state.players.find(
+          (player) => player.profile.id === req.user!.id
+        );
+        if (!slot) throw new Error("Bạn chưa tham gia phòng này");
+        manager.chat(room.state.id, slot.id, data.text);
+        res.json({ ok: true });
       } catch (error: any) {
         res.status(400).json({ message: error.message });
       }

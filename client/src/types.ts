@@ -48,7 +48,17 @@ export interface GameRoomState {
   phase: "lobby" | "night" | "day" | "vote" | "ended";
   day: number;
   eventLog: string[];
+  chatLog: ChatMessage[];
   winner?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  senderId?: string;
+  senderName: string;
+  text: string;
+  createdAt: number;
+  type: "system" | "player";
 }
 
 export interface InventoryEntry {

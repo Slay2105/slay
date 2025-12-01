@@ -16,6 +16,7 @@ const GameBoard = ({ room }: Props) => {
   const [actionType, setActionType] = useState<"inspect" | "protect" | "kill">("inspect");
   const [targetId, setTargetId] = useState<string | undefined>();
   const [chat, setChat] = useState("");
+  const [abilityOpen, setAbilityOpen] = useState(true);
 
   const mySlot = useMemo(
     () => room?.players.find((slot) => slot.profile.id === profile?.id),
@@ -33,6 +34,13 @@ const GameBoard = ({ room }: Props) => {
   const handleVote = async () => {
     if (!room || !targetId) return;
     await roomActions.vote(room.id, targetId);
+  };
+
+  const handleChatSend = async () => {
+    if (!room || !chat.trim()) return;
+    const text = chat.trim();
+    setChat("");
+    await roomActions.sendChat(room.id, text);
   };
 
   const aliveCount = room?.players.filter((slot) => slot.alive).length ?? 0;
@@ -54,7 +62,7 @@ const GameBoard = ({ room }: Props) => {
         )}
       </div>
       <div className="board-content">
-        <div className="player-grid">
+        <div className={`player-grid ${abilityOpen ? "" : "expanded"}`}>
           {room?.players.map((slot, index) => (
             <div key={slot.id} className={`player-card ${!slot.alive ? "dead" : ""}`}>
               <div className="player-rank">{index + 1}</div>
@@ -68,50 +76,80 @@ const GameBoard = ({ room }: Props) => {
           {!room && <p className="empty-state">Tạo phòng để bắt đầu trận 16 người.</p>}
         </div>
         <div className="side-panel">
-          <div className="action-panel">
-            <div className="action-header">
-              <p>Chức năng</p>
-              <span>{mySlot?.role?.name ?? "Chưa có"}</span>
+          {abilityOpen && (
+            <div className="action-panel">
+              <div className="action-header">
+                <p>Chức năng</p>
+                <span>{mySlot?.role?.name ?? "Chưa có"}</span>
+              </div>
+              <div className="action-controls">
+                <select value={actionType} onChange={(e) => setActionType(e.target.value as any)}>
+                  <option value="inspect">Soi</option>
+                  <option value="protect">Bảo vệ</option>
+                  <option value="kill">Tấn công</option>
+                </select>
+                <select value={targetId ?? ""} onChange={(e) => setTargetId(e.target.value)}>
+                  <option value="">Chọn mục tiêu</option>
+                  {room?.players.filter((slot) => slot.alive).map((slot) => (
+                    <option key={slot.id} value={slot.id}>
+                      {slot.profile.username}
+                    </option>
+                  ))}
+                </select>
+                <button disabled={!canAct} onClick={handleAction}>
+                  Kích hoạt
+                </button>
+                <button disabled={!canVote} onClick={handleVote}>
+                  Bỏ phiếu
+                </button>
+              </div>
             </div>
-            <div className="action-controls">
-              <select value={actionType} onChange={(e) => setActionType(e.target.value as any)}>
-                <option value="inspect">Soi</option>
-                <option value="protect">Bảo vệ</option>
-                <option value="kill">Tấn công</option>
-              </select>
-              <select value={targetId ?? ""} onChange={(e) => setTargetId(e.target.value)}>
-                <option value="">Chọn mục tiêu</option>
-                {room?.players.filter((slot) => slot.alive).map((slot) => (
-                  <option key={slot.id} value={slot.id}>
-                    {slot.profile.username}
-                  </option>
-                ))}
-              </select>
-              <button disabled={!canAct} onClick={handleAction}>
-                Kích hoạt
-              </button>
-              <button disabled={!canVote} onClick={handleVote}>
-                Bỏ phiếu
-              </button>
-            </div>
-          </div>
+          )}
           <div className="chat-panel">
             <div className="chat-header">
-              <span>Chat & Nhật ký</span>
+              <div className="chat-title">
+                <button
+                  type="button"
+                  className={`ability-pill ${abilityOpen ? "active" : ""}`}
+                  onClick={() => setAbilityOpen((prev) => !prev)}
+                >
+                  🐾
+                </button>
+                <span>Chat & Nhật ký</span>
+              </div>
               <button type="button">⚙️</button>
             </div>
             <div className="chat-log">
-              {room?.eventLog.slice(-8).map((line, idx) => (
-                <p key={`${line}-${idx}`}>{line}</p>
+              {room?.chatLog.slice(-20).map((msg) => (
+                <p key={msg.id} className={`chat-line ${msg.type}`}>
+                  <strong>{msg.senderName}</strong>: {msg.text}
+                </p>
               ))}
+              {!room && <p>Tham gia phòng để trò chuyện.</p>}
+              {room && room.chatLog.length === 0 && <p>Hãy gửi tin nhắn đầu tiên!</p>}
             </div>
+            {room && room.eventLog.length > 0 && (
+              <div className="event-mini-log">
+                {room.eventLog.slice(-3).map((line, idx) => (
+                  <p key={`${line}-${idx}`}>{line}</p>
+                ))}
+              </div>
+            )}
             <div className="chat-input">
               <input
                 value={chat}
                 onChange={(e) => setChat(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleChatSend();
+                  }
+                }}
                 placeholder="Nhập tin nhắn..."
               />
-              <button type="button">Gửi</button>
+              <button type="button" disabled={!room || !chat.trim()} onClick={handleChatSend}>
+                Gửi
+              </button>
             </div>
           </div>
         </div>

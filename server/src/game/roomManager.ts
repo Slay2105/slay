@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 import { v4 as uuid } from "uuid";
 import {
+  ChatMessage,
   GameRoomOptions,
   GameRoomState,
   PlayerProfile,
@@ -37,7 +38,8 @@ class GameRoom extends EventEmitter {
       phase: "lobby",
       day: 0,
       voteLog: [],
-      eventLog: []
+      eventLog: [],
+      chatLog: []
     };
   }
 
@@ -57,6 +59,7 @@ class GameRoom extends EventEmitter {
       meta: {}
     };
     this.state.players.push(slot);
+    this.addChat(null, `${profile.username} đã vào phòng`, "system");
     this.emitUpdate();
     return this.state;
   }
@@ -82,6 +85,26 @@ class GameRoom extends EventEmitter {
 
   queueAction(slotId: string, action: PendingAction) {
     this.pendingActions.set(slotId, action);
+  }
+
+  addChat(slotId: string | null, text: string, type: ChatMessage["type"] = "player") {
+    const sender =
+      slotId !== null
+        ? this.state.players.find((slot) => slot.id === slotId)
+        : undefined;
+    const entry: ChatMessage = {
+      id: uuid(),
+      senderId: sender?.id,
+      senderName: sender?.profile.username ?? "Hệ thống",
+      text,
+      type,
+      createdAt: Date.now()
+    };
+    this.state.chatLog.push(entry);
+    if (this.state.chatLog.length > 100) {
+      this.state.chatLog.shift();
+    }
+    this.emitUpdate();
   }
 
   submitVote(slotId: string, targetId: string) {
@@ -114,6 +137,7 @@ class GameRoom extends EventEmitter {
     this.state.phase = "night";
     this.state.day = 1;
     this.state.eventLog.push("Trò chơi bắt đầu. Đêm 1 bắt đầu!");
+    this.addChat(null, "Đêm 1 bắt đầu - hãy dùng chức năng của bạn!", "system");
     this.emitUpdate();
   }
 
@@ -124,10 +148,12 @@ class GameRoom extends EventEmitter {
         this.resolveNight();
         this.state.phase = "day";
         this.state.eventLog.push(`Bình minh Ngày ${this.state.day}`);
+        this.addChat(null, `Ngày ${this.state.day} bắt đầu - bàn luận thôi!`, "system");
         break;
       case "day":
         this.state.phase = "vote";
         this.state.eventLog.push("Bắt đầu bỏ phiếu");
+        this.addChat(null, "Mở vote! Chọn người bị treo cổ.", "system");
         break;
       case "vote": {
         this.resolveVote();
@@ -137,6 +163,7 @@ class GameRoom extends EventEmitter {
         this.state.phase = "night";
         this.state.day += 1;
         this.state.eventLog.push(`Đêm ${this.state.day} bắt đầu`);
+        this.addChat(null, `Đêm ${this.state.day} tràn về - hãy cẩn thận!`, "system");
         break;
       }
       default:
@@ -201,6 +228,7 @@ class GameRoom extends EventEmitter {
         this.state.eventLog.push(
           `Mục tiêu bị tấn công nhưng được bảo vệ an toàn`
         );
+        this.addChat(null, "Đêm qua có tiếng la hét nhưng không ai chết.", "system");
       } else {
         const victim = this.state.players.find((slot) => slot.id === targetId);
         if (victim) {
@@ -208,10 +236,12 @@ class GameRoom extends EventEmitter {
           this.state.eventLog.push(
             `${victim.profile.username} đã bị giết trong đêm!`
           );
+          this.addChat(null, `${victim.profile.username} bị sói xé xác!`, "system");
         }
       }
     } else {
       this.state.eventLog.push("Đêm yên bình, không ai chết");
+      this.addChat(null, "Đêm yên bình, không ai hy sinh.", "system");
     }
     this.checkWinner();
   }
@@ -251,6 +281,7 @@ class GameRoom extends EventEmitter {
       this.state.eventLog.push(
         `${victim.profile.username} bị treo cổ với ${votes} phiếu`
       );
+      this.addChat(null, `${victim.profile.username} bị dân làng xử treo cổ.`, "system");
     }
     this.checkWinner();
   }
@@ -341,5 +372,17 @@ export class RoomManager extends EventEmitter {
   vote(roomId: string, playerId: string, targetId: string) {
     const room = this.getRoom(roomId);
     room.submitVote(playerId, targetId);
+  }
+
+  chat(roomId: string, playerId: string, text: string) {
+    const room = this.getRoom(roomId);
+    const slot = room.state.players.find((player) => player.id === playerId);
+    if (!slot) {
+      throw new Error("Không tìm thấy người chơi");
+    }
+    if (!text.trim()) {
+      throw new Error("Tin nhắn trống");
+    }
+    room.addChat(playerId, text.trim());
   }
 }

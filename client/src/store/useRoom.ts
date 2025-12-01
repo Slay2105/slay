@@ -18,6 +18,7 @@ type RoomStore = {
   advanceRoom: (roomId: string) => Promise<void>;
   sendAction: (roomId: string, action: { type: "kill" | "protect" | "inspect"; targetId: string }) => Promise<void>;
   vote: (roomId: string, targetId: string) => Promise<void>;
+  sendChat: (roomId: string, text: string) => Promise<void>;
 };
 
 export const useRoomStore = create<RoomStore>((set, get) => ({
@@ -69,5 +70,8 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
   },
   async vote(roomId, targetId) {
     await api.post(`/rooms/${roomId}/vote`, { targetId });
+  },
+  async sendChat(roomId, text) {
+    await api.post(`/rooms/${roomId}/chat`, { text });
   }
 }));
