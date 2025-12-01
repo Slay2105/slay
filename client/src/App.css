@@ -1,0 +1,441 @@
+.landing {
+  min-height: 100vh;
+  padding: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  background: radial-gradient(circle at 20% 20%, #2f7fff, transparent 70%),
+    radial-gradient(circle at 80% 0%, #ff4f9c, transparent 60%),
+    #060b1b;
+}
+
+.landing-preview {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 24px;
+  width: 320px;
+  text-align: center;
+}
+
+.mock-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.mock-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffb3d2, #ffd86f);
+  opacity: 0.8;
+}
+
+.auth-panel {
+  width: 320px;
+  background: rgba(11, 16, 34, 0.9);
+  padding: 2rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-tabs button {
+  flex: 1;
+  padding: 0.85rem;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f5f8ff;
+  cursor: pointer;
+}
+
+.auth-tabs button.active {
+  background: linear-gradient(120deg, #ff72c6, #6a8bff);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  gap: 0.35rem;
+}
+
+.auth-form input {
+  border-radius: 12px;
+  border: none;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.auth-form button {
+  margin-top: 0.5rem;
+  padding: 0.9rem;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, #ff8bd5, #7f7bff);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-error {
+  color: #ff8aa6;
+  font-size: 0.8rem;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 2rem 3rem 4rem;
+  background: radial-gradient(circle at top, rgba(85, 150, 255, 0.25), transparent 55%),
+    #060a17;
+  color: #f4f7ff;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.app-header button {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: white;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.app-body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+}
+
+.panel {
+  background: rgba(8, 12, 26, 0.85);
+  border-radius: 24px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 1rem;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.panel-label {
+  letter-spacing: 0.3em;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.badge {
+  background: linear-gradient(135deg, #ffd966, #ffb347);
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  color: #341800;
+  font-weight: 700;
+}
+
+.xp-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6ddcff, #7f7bff, #ff8bd5);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  gap: 0.8rem;
+}
+
+.avatar-picker .avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+}
+
+.avatar-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+.avatar-card.selected {
+  border-color: #ff8bd5;
+  box-shadow: 0 0 12px rgba(255, 139, 213, 0.5);
+}
+
+.avatar-card img {
+  width: 72px;
+  height: 72px;
+}
+
+.leaderboard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.leaderboard li {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.rank {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shop-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.shop-card {
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.shop-card button {
+  border: none;
+  border-radius: 14px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+}
+
+.shop-card.rarity-epic {
+  border-color: rgba(255, 139, 213, 0.6);
+}
+
+.shop-card.rarity-legendary {
+  border-color: rgba(255, 217, 102, 0.7);
+}
+
+.column-right .panel {
+  height: fit-content;
+}
+
+.game-board {
+  background: rgba(8, 12, 26, 0.9);
+  border-radius: 32px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.phase-tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: #78a8ff;
+}
+
+.board-actions button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.4rem 0.9rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.board-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.player-card {
+  background: linear-gradient(180deg, #23355f, #141c32);
+  border-radius: 18px;
+  padding: 0.9rem;
+  text-align: center;
+  position: relative;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.player-card.dead {
+  opacity: 0.3;
+  text-decoration: line-through;
+}
+
+.player-card img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-bottom: 0.4rem;
+}
+
+.player-rank {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.action-panel, .chat-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 18px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.action-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.action-controls select, .action-controls button {
+  border-radius: 12px;
+  border: none;
+  padding: 0.6rem;
+}
+
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  height: 280px;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-log {
+  flex: 1;
+  overflow: auto;
+  margin: 0.8rem 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chat-input input {
+  flex: 1;
+  border-radius: 12px;
+  border: none;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.chat-input button {
+  border-radius: 12px;
+  border: none;
+  padding: 0 1rem;
+}
+
+.lobby-list .lobby-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.lobby-card {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lobby-card button {
+  border: none;
+  border-radius: 12px;
+  padding: 0.4rem 0.9rem;
+}
+
+@media (max-width: 1200px) {
+  .app-body {
+    grid-template-columns: 1fr;
+  }
+  .player-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
