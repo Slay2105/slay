@@ -103,14 +103,20 @@ class CommandRouter
 
     private function tokenize(string $command): array
     {
-        preg_match_all('/"([^"]*)"|\'([^\']*)\'|(\S+)/', $command, $matches);
+        preg_match_all('/"([^"]*)"|\'([^\']*)\'|(\S+)/u', $command, $matches);
         $parts = [];
 
-        foreach ($matches[0] as $index => $value) {
-            $part = $matches[1][$index] ?? $matches[2][$index] ?? $matches[3][$index] ?? '';
-            if ($part !== '') {
-                $parts[] = $part;
+        if (!empty($matches[0])) {
+            foreach ($matches[0] as $index => $value) {
+                $part = $matches[1][$index] ?? $matches[2][$index] ?? $matches[3][$index] ?? '';
+                if ($part !== '') {
+                    $parts[] = $part;
+                }
             }
+        }
+
+        if (!$parts) {
+            $parts = preg_split('/\s+/u', trim($command), -1, PREG_SPLIT_NO_EMPTY) ?: [];
         }
 
         return $parts;
